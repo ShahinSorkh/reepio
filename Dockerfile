@@ -1,5 +1,4 @@
 FROM node:0.12
-MAINTAINER bn0ir <gblacknoir@gmail.com>
 
 RUN apt-get update \
     && apt-get install -y \
