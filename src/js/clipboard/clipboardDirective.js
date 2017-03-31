@@ -1,7 +1,7 @@
 /**
  * Created by andre (http://korve.github.io/) on 06.12.2014
  */
-const swfobject = require( "swfobject" );
+import swfobject from 'swfobject';
 
 angular.module('reepioClipboardDirective', [])
 	.value('clipboardSwf', 'CopyToClipboard.swf')
