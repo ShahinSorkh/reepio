@@ -15,7 +15,8 @@ Have a look into the `config.dist.js` to get an overview over the available opti
 
 Running locally
 ---
-	cp public/config.dist.js public/config.js
+	cd reepio
+	cp config/config.dist.js config/config.dev.js
 	npm install
 	npm run build
 	npm start
