@@ -75,8 +75,9 @@
                         var file = newValue[0];
 
                         uploadService.registerFile(file.rawFile).then(function (id) {
-                            file.fileId = id.fileId;
-                            file.uniqueUrl = $location.absUrl() + 'd/' + id.peerId + id.fileId;
+							let url = `${$location.protocol()}://${$location.host()}`;
+							file.fileId = id.fileId;
+							file.uniqueUrl = `${url}/d/${id.peerId}${id.fileId}`;
                         }, function (err) {
                             $log.error(err);
                         });
