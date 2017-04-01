@@ -103,22 +103,13 @@
                                     @IoReep
                                 </a>
                             </li>
-                            <li>
-                                <a href="https://patreon.com/reepio" target="_blank">
-                                    <i class="glyphicon glyphicon-heart"></i>
-                                    Patreon
-                                </a>
-                            </li>
-                            <li>
+                            <li class="nav-divider visible-xs"></li>
+                            <li class="visible-xs">
                                 <p class="navbar-text">
-                                    <iframe src="github-btn.html?user=KodeKraftwerk&amp;repo=reep.io&amp;type=watch&amp;count=true"
-                                            style="overflow: hidden; border: 0; background: transparent" width="110"
-                                            height="20"></iframe>
+                                    &copy; <a data-ng-href="http://reep.io/">reep.io</a>
+                                    <span ng-bind="copyrightYear"></span>
                                 </p>
                             </li>
-                            <li class="nav-divider visible-xs"></li>
-                            <li class="visible-xs"><p class="navbar-text">&copy; <a data-ng-href="http://reep.io/">reep.io</a>
-                                2014</p></li>
                         </ul>
 
                         <div class="navbar-right col-sm-3"
@@ -142,9 +133,18 @@
             <nav class="navbar navbar-inverse navbar-fixed-bottom" role="navigation">
                 <div class="container">
                     <ul class="nav navbar-nav">
-                        <li><p class="navbar-text">&copy; <a data-ng-href="http://reep.io/">reep.io</a> 2016</p></li>
+                        <li><p class="navbar-text">&copy; <a data-ng-href="http://reep.io/">reep.io</a> <span ng-bind="copyrightYear"></span></p></li>
                         <li><a data-ng-href="/imprint">Imprint</a></li>
                         <li><a data-ng-href="/privacy">Privacy</a></li>
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            <p class="navbar-text">
+                                <iframe src="github-btn.html?user=KodeKraftwerk&amp;repo=reep.io&amp;type=watch&amp;count=true"
+                                        style="overflow: hidden; border: 0; background: transparent" width="110"
+                                        height="20"></iframe>
+                            </p>
+                        </li>
                     </ul>
                 </div>
             </nav>

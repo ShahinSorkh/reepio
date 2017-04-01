@@ -117,4 +117,5 @@ angular.module('peertome', use, ['$compileProvider', function ($compileProvider)
 		};
 
 		$rootScope.running = true;
+		$rootScope.copyrightYear = (new Date()).getFullYear();
 }]);
