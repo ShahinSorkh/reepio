@@ -7,7 +7,6 @@ import 'angular-animate';
 import 'angular-ui-bootstrap';
 import 'angulartics';
 import 'angulartics-piwik';
-import 'swfobject';
 import './common/filters/fileFilters.js';
 import './common/filters/stringFilters.js';
 import './common/directives/fileIcon.js';
@@ -36,6 +35,9 @@ import './static/module.js';
 import './static/static.js';
 import './static/slidingFileDirective.js';
 import './title/title.js';
+
+// import css frameworks
+import 'less/theme.less';
 
 var use = [
 	'ngAnimate',

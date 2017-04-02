@@ -1,64 +1,87 @@
-var path = require('path');
-var fs = require('fs');
-var webpack = require('webpack');
-var env = process.env.NODE_ENV || 'dev';
-var configPath = path.resolve(__dirname, "config", "config." + env + ".js");
-var config = require(configPath);
-var COPYRIGHT = fs.readFileSync(path.resolve(__dirname, "COPYRIGHT")).toString();
+const path = require('path');
+const fs = require('fs');
+const webpack = require('webpack');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
+let env = process.env.NODE_ENV || 'dev';
+let configPath = path.resolve(__dirname, "config", "config." + env + ".js");
+let config = require(configPath);
+let COPYRIGHT = fs.readFileSync(path.resolve(__dirname, "COPYRIGHT")).toString();
 
-var plugins = [
-    new webpack.ProvidePlugin({
-        $: "jquery",
-        jQuery: "jquery",
-        Peer: "peerjs/lib/peer",
-        util: "peerjs/lib/util"
-    }),
-    new webpack.DefinePlugin({
-        APP_ENV: JSON.stringify(env),
-        APP_CONFIG: JSON.stringify(config),
-        'process.env': {
-            'NODE_ENV': JSON.stringify(env)
-        }
-    })
+let plugins = [
+	new webpack.ProvidePlugin({
+		$: "jquery",
+		jQuery: "jquery",
+		Peer: "peerjs/lib/peer",
+		util: "peerjs/lib/util"
+	}),
+	new webpack.DefinePlugin({
+		APP_ENV: JSON.stringify(env),
+		APP_CONFIG: JSON.stringify(config),
+		'process.env': {
+			'NODE_ENV': JSON.stringify(env)
+		}
+	}),
+	new ExtractTextPlugin({
+		filename: 'theme.css'
+	}),
 ];
 
-if( env !== 'dev' ) {
-    plugins = plugins.concat([
-        new webpack.optimize.DedupePlugin(),
-        new webpack.optimize.UglifyJsPlugin({
-            mangle: {
-                except: ['$', 'jQuery', 'exports', 'require', 'APP_CONFIG', 'APP_ENV']
-            }
-        }),
-        new webpack.BannerPlugin(COPYRIGHT)
-    ]);
+if (env !== 'dev') {
+	plugins = plugins.concat([
+		new webpack.optimize.DedupePlugin(),
+		new webpack.optimize.UglifyJsPlugin({
+			mangle: {
+				except: ['$', 'jQuery', 'exports', 'require', 'APP_CONFIG', 'APP_ENV']
+			}
+		}),
+		new webpack.BannerPlugin(COPYRIGHT)
+	]);
 }
 
 module.exports = {
-    context: __dirname + "/app",
-    entry: __dirname + "/src/js/app.js",
-    output: {
-        path: __dirname + "/public/js",
-        filename: "app.bundle.js"
-    },
-    resolve: {
-        alias: {
-            jquery: "jquery/src/jquery"
-        }
-    },
-    module: {
-        loaders: [
-            {
-                test: /\.js$/,
-                loader: 'babel-loader',
-                exclude: /(node_modules|bower_components)/,
-                query: {
-                    presets: ['es2015']
-                }
-            }
-        ]
-    },
-    debug: env === 'dev',
-    devtool: env === 'dev' ? "eval" : "cheap-module-source-map",
-    plugins: plugins
+	entry: {
+		app: require.resolve(__dirname + "/src/js/app.js")
+	},
+	output: {
+		path: path.resolve(__dirname, "public/app"),
+		filename: "[name].bundle.js"
+	},
+	resolve: {
+		modules: [
+			"node_modules",
+			path.resolve(__dirname, "src")
+		],
+		alias: {
+			jquery$: require.resolve("jquery/src/jquery")
+		},
+		extensions: [".js", ".css", ".less"],
+	},
+	module: {
+		rules: [
+			{
+				test: /\.js$/,
+				exclude: /(node_modules)/,
+				loader: 'babel-loader',
+				options: {
+					presets: ['es2015']
+				}
+			},
+			{
+				test: /\.less$/,
+				use: ExtractTextPlugin.extract([
+					{loader: "css-loader"},
+					{loader: "less-loader"}
+				])
+			},
+			{
+				test: /\.(png|jpg|gif|svg|eot|ttf|woff|woff2)$/,
+				loader: 'url-loader',
+				options: {
+					limit: 10000
+				}
+			}
+		]
+	},
+	devtool: env === 'dev' ? "eval" : "cheap-module-source-map",
+	plugins: plugins
 };

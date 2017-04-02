@@ -1,14 +1,8 @@
 /**
  * Created by andre (http://korve.github.io/) on 06.12.2014
  */
-import swfobject from 'swfobject';
 
 angular.module('reepioClipboardDirective', [])
-	.value('clipboardSwf', 'CopyToClipboard.swf')
-	.value('clipboardExpressInstallSwf', 'expressInstall.swf')
-	.config(function () {
-		swfobject.switchOffAutoHideShow();
-	})
 	.service('clipboardDirectiveIdService', [function () {
 		return {
 			__id: 0,
