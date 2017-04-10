@@ -12,7 +12,8 @@ let plugins = [
 		$: "jquery",
 		jQuery: "jquery",
 		Peer: "peerjs/lib/peer",
-		util: "peerjs/lib/util"
+		util: "peerjs/lib/util",
+		angular: "angular"
 	}),
 	new webpack.DefinePlugin({
 		APP_ENV: JSON.stringify(env),
@@ -28,12 +29,6 @@ let plugins = [
 
 if (env !== 'dev') {
 	plugins = plugins.concat([
-		new webpack.optimize.DedupePlugin(),
-		new webpack.optimize.UglifyJsPlugin({
-			mangle: {
-				except: ['$', 'jQuery', 'exports', 'require', 'APP_CONFIG', 'APP_ENV']
-			}
-		}),
 		new webpack.BannerPlugin(COPYRIGHT)
 	]);
 }
@@ -82,6 +77,6 @@ module.exports = {
 			}
 		]
 	},
-	devtool: env === 'dev' ? "eval" : "cheap-module-source-map",
+	devtool: env === 'dev' ? "eval" : false,
 	plugins: plugins
 };
