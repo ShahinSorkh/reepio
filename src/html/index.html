@@ -84,16 +84,16 @@
 
                     <div class="collapse navbar-collapse" uib-collapse="isNavCollapsed">
                         <ul class="nav navbar-nav">
-                            <li data-ng-class="{active: getIsPageActive('/')}">
+                            <li data-ng-class="{active: getIsPageActive('/')}" ng-click="isNavCollapsed = true">
                                 <a data-ng-href="/">Upload<span data-ng-show="fileModel.files.length > 0">
                                 (<span data-ng-bind="fileModel.files.length"></span>)
                             </span></a>
                             </li>
-                            <li data-ng-class="{active: getIsPageActive('/about')}">
+                            <li data-ng-class="{active: getIsPageActive('/about')}" ng-click="isNavCollapsed = true">
                                 <a data-ng-href="/about">About</a>
                             </li>
-                            <li class="visible-xs"><a data-ng-href="/imprint">Imprint</a></li>
-                            <li class="visible-xs"><a data-ng-href="/privacy">Privacy</a></li>
+                            <li class="visible-xs"><a data-ng-href="/imprint" ng-click="isNavCollapsed = true">Imprint</a></li>
+                            <li class="visible-xs"><a data-ng-href="/privacy" ng-click="isNavCollapsed = true">Privacy</a></li>
                             <li>
                                 <a href="https://twitter.com/IoReep" target="_blank">
                                     @IoReep
@@ -101,7 +101,7 @@
                             </li>
                         </ul>
                         <ul class="nav navbar-nav navbar-right">
-                            <li data-ng-class="{active: getIsPageActive('/about')}">
+                            <li data-ng-class="{active: getIsPageActive('/about')}" ng-click="isNavCollapsed = true">
                                 <a data-ng-href="/about#donate">Donate <i class="fa fa-heart"></i></a>
                             </li>
                             <li class="nav-divider visible-xs"></li>
