@@ -118,7 +118,6 @@ body {
 @navbar-default-bg: #fff;
 @navbar-default-link-color: #060606;
 @navbar-default-link-active-color: @brand-primary;
-
 @navbar-default-link-active-bg: #fff;
 
 @navbar-default-brand-color: @navbar-default-link-color;
@@ -248,6 +247,38 @@ body {
   &.ng-enter.ng-enter-active {
     opacity: 1;
   }
+}
+
+@keyframes pulsating {
+  0% {
+    -webkit-transform: scale(1);
+    -moz-transform: scale(1);
+    -ms-transform: scale(1);
+    -o-transform: scale(1);
+    transform: scale(1);
+  }
+  50% {
+    -webkit-transform: scale(1.4);
+    -moz-transform: scale(1.4);
+    -ms-transform: scale(1.4);
+    -o-transform: scale(1.4);
+    transform: scale(1.4);
+    text-shadow: 0 0 .2em lighten(@brand-primary, 10%);
+    color: @brand-primary;
+  }
+  100% {
+    -webkit-transform: scale(1);
+    -moz-transform: scale(1);
+    -ms-transform: scale(1);
+    -o-transform: scale(1);
+    transform: scale(1);
+  }
+}
+
+.pulsating {
+  -webkit-animation: pulsating 3s infinite ease-in-out;
+  -o-animation: pulsating 3s infinite ease-in-out;
+  animation: pulsating 3s infinite ease-in-out;
 }
 
 .upload-queue-item .media,
@@ -511,7 +542,7 @@ a.lock-file {
 #page-about {
   margin-top: 200px;
 
-  @pathHeight: 1366px;
+  @pathHeight: 1716px;
 
   .sliding-file {
     margin-left: 2px;
@@ -560,8 +591,8 @@ a.lock-file {
     margin-top: @pathHeight + 100 + 6; // add first slot height + borders
   }
 
-  .section-about-us {
-    margin-bottom: 400px;
+  .section-donate {
+    margin-bottom: 100px;
   }
 
   @media (max-width: @screen-xs-max) {
