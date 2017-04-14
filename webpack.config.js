@@ -1,11 +1,41 @@
-const path = require('path');
 const fs = require('fs');
+const path = require('path');
 const webpack = require('webpack');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
-let env = process.env.NODE_ENV || 'dev';
-let configPath = path.resolve(__dirname, "config", "config." + env + ".js");
-let config = require(configPath);
-let COPYRIGHT = fs.readFileSync(path.resolve(__dirname, "COPYRIGHT")).toString();
+const clc = require('cli-color');
+
+function getEnv() {
+	return process.env.NODE_ENV || 'dev';
+}
+
+function getCopyright() {
+	let licensePath = path.resolve(__dirname, "COPYRIGHT");
+	try {
+		return fs.readFileSync(licensePath).toString();
+	} catch (e) {
+		console.error(`no copyright file found at ${licensePath}`);
+		process.exit(1);
+	}
+}
+
+function getConfigurationPathForEnvironment(env) {
+	return path.resolve(__dirname, 'config', `config.${env}.js`);
+}
+
+function loadConfig() {
+	let env = getEnv();
+	let envConfiguration = getConfigurationPathForEnvironment(env);
+	try {
+		return require(envConfiguration);
+	} catch (e) {
+		let defaultConfiguration = getConfigurationPathForEnvironment('dist');
+		console.log(clc.yellow(`No config found for environment ${env}. Loading default configuration at ${defaultConfiguration}`));
+		return require(defaultConfiguration);
+	}
+}
+
+let env = getEnv();
+let copyright = getCopyright();
 
 let plugins = [
 	new webpack.ProvidePlugin({
@@ -17,19 +47,19 @@ let plugins = [
 	}),
 	new webpack.DefinePlugin({
 		APP_ENV: JSON.stringify(env),
-		APP_CONFIG: JSON.stringify(config),
+		APP_CONFIG: JSON.stringify(loadConfig(env)),
 		'process.env': {
 			'NODE_ENV': JSON.stringify(env)
 		}
 	}),
 	new ExtractTextPlugin({
 		filename: 'theme.css'
-	}),
+	})
 ];
 
-if (env !== 'dev') {
+if (getEnv() !== 'dev') {
 	plugins = plugins.concat([
-		new webpack.BannerPlugin(COPYRIGHT)
+		new webpack.BannerPlugin(copyright)
 	]);
 }
 

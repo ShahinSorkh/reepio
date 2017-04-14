@@ -1,7 +1,7 @@
 'use strict';
 
 import 'jquery';
-import 'angular';
+import angular from 'angular';
 import 'angular-route';
 import 'angular-animate';
 import 'angular-ui-bootstrap';
@@ -39,7 +39,7 @@ import './title/title.js';
 // import css frameworks
 import 'less/theme.less';
 
-var use = [
+const use = [
 	'ngAnimate',
 	'ngRoute',
 	'upload',
@@ -78,7 +78,7 @@ angular.module('peertome', use, ['$compileProvider', function ($compileProvider)
 		$rootScope.appEnv = appEnv;
 
 		// init heise social share privacy plugin.
-		var el = document.getElementById('socialshareprivacy');
+		let el = document.getElementById('socialshareprivacy');
 		if(el){
 			el.socialSharePrivacy({
 				services : {
