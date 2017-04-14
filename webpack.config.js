@@ -22,8 +22,7 @@ function getConfigurationPathForEnvironment(env) {
 	return path.resolve(__dirname, 'config', `config.${env}.js`);
 }
 
-function loadConfig() {
-	let env = getEnv();
+function loadConfig(env) {
 	let envConfiguration = getConfigurationPathForEnvironment(env);
 	try {
 		return require(envConfiguration);
@@ -36,6 +35,7 @@ function loadConfig() {
 
 let env = getEnv();
 let copyright = getCopyright();
+let config = loadConfig(env);
 
 let plugins = [
 	new webpack.ProvidePlugin({
@@ -47,7 +47,7 @@ let plugins = [
 	}),
 	new webpack.DefinePlugin({
 		APP_ENV: JSON.stringify(env),
-		APP_CONFIG: JSON.stringify(loadConfig(env)),
+		APP_CONFIG: JSON.stringify(config),
 		'process.env': {
 			'NODE_ENV': JSON.stringify(env)
 		}
