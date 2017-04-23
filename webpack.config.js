@@ -4,35 +4,6 @@ const webpack = require('webpack');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const clc = require('cli-color');
 
-function getEnv() {
-	return process.env.NODE_ENV || 'dev';
-}
-
-function getCopyright() {
-	let licensePath = path.resolve(__dirname, "COPYRIGHT");
-	try {
-		return fs.readFileSync(licensePath).toString();
-	} catch (e) {
-		console.error(`no copyright file found at ${licensePath}`);
-		process.exit(1);
-	}
-}
-
-function getConfigurationPathForEnvironment(env) {
-	return path.resolve(__dirname, 'config', `config.${env}.js`);
-}
-
-function loadConfig(env) {
-	let envConfiguration = getConfigurationPathForEnvironment(env);
-	try {
-		return require(envConfiguration);
-	} catch (e) {
-		let defaultConfiguration = getConfigurationPathForEnvironment('dist');
-		console.log(clc.yellow(`No config found for environment ${env}. Loading default configuration at ${defaultConfiguration}`));
-		return require(defaultConfiguration);
-	}
-}
-
 let env = getEnv();
 let copyright = getCopyright();
 let config = loadConfig(env);
@@ -42,8 +13,7 @@ let plugins = [
 		$: "jquery",
 		jQuery: "jquery",
 		Peer: "peerjs/lib/peer",
-		util: "peerjs/lib/util",
-		angular: "angular"
+		util: "peerjs/lib/util"
 	}),
 	new webpack.DefinePlugin({
 		APP_ENV: JSON.stringify(env),
@@ -57,7 +27,7 @@ let plugins = [
 	})
 ];
 
-if (getEnv() !== 'dev') {
+if (env !== 'dev') {
 	plugins = plugins.concat([
 		new webpack.BannerPlugin(copyright)
 	]);
@@ -86,10 +56,7 @@ module.exports = {
 			{
 				test: /\.js$/,
 				exclude: /(node_modules)/,
-				loader: 'babel-loader',
-				options: {
-					presets: ['es2015']
-				}
+				loader: 'babel-loader'
 			},
 			{
 				test: /\.less$/,
@@ -110,3 +77,32 @@ module.exports = {
 	devtool: env === 'dev' ? "eval" : false,
 	plugins: plugins
 };
+
+function getEnv() {
+	return process.env.NODE_ENV || 'dev';
+}
+
+function getCopyright() {
+	let licensePath = path.resolve(__dirname, "COPYRIGHT");
+	try {
+		return fs.readFileSync(licensePath).toString();
+	} catch (e) {
+		console.error(clc.red(`no copyright file found at ${licensePath}`));
+		process.exit(1);
+	}
+}
+
+function getConfigurationPathForEnvironment(env) {
+	return path.resolve(__dirname, 'config', `config.${env}.js`);
+}
+
+function loadConfig(env) {
+	let envConfiguration = getConfigurationPathForEnvironment(env);
+	try {
+		return require(envConfiguration);
+	} catch (e) {
+		let defaultConfiguration = getConfigurationPathForEnvironment('dist');
+		console.log(clc.yellow(`No config found for environment ${env}. Loading default configuration at ${defaultConfiguration}`));
+		return require(defaultConfiguration);
+	}
+}
