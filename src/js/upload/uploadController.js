@@ -105,26 +105,28 @@
                     }
                 };
 
-                $scope.lockFile = function (file) {
-                    $scope.modalDialogFile = file;
+				$scope.showPasswordDialog = function (file) {
+					return $uibModal.open({
+						templateUrl: 'html/upload/modals/password.html',
+						controller: ['$scope', function ($scope) {
+							$scope.input = {};
+							$scope.input.password = file.password;
 
-                    var modalInstance = $uibModal.open({
-                        templateUrl: 'html/upload/modals/password.html',
-                        controller: ['$scope', function ($scope) {
-                            $scope.input = {};
-                            $scope.input.password = file.password;
+							$scope.ok = function () {
+								$scope.$close($scope.input.password);
+							};
 
-                            $scope.ok = function () {
-                                $scope.$close($scope.input.password);
-                            };
+							$scope.close = function () {
+								$scope.$dismiss('cancel');
+							};
+						}]
+					});
+				};
 
-                            $scope.close = function () {
-                                $scope.$dismiss('cancel');
-                            };
-                        }]
-                    });
+				$scope.lockFile = function (file) {
+					$scope.modalDialogFile = file;
 
-                    modalInstance.result
+					this.showPasswordDialog(file).result
                         .then(function (password) {
 							uploadService.setPasswordForFile(file.fileId, password);
                             file.password = password;
@@ -189,63 +191,10 @@
                     })
                 ];
 
-                // var paste = $.fn.pastableNonInputable().appendTo('body');
-                //
-                // paste.on('pasteImage', function (e, data) {
-                //     $scope.$apply(function () {
-                //         //data:image/png;base64,....
-                //         var byteString = atob(data.dataURL.split(',')[1]);
-                //
-                //         // separate out the mime component
-                //         var mimeString = data.dataURL.split(',')[0].split(':')[1].split(';')[0];
-                //
-                //         if (byteString === null || byteString.length <= 0 || mimeString === null || mimeString.length <= 0)
-                //             return;
-                //
-                //         var ab = new ArrayBuffer(byteString.length);
-                //         var ia = new Uint8Array(ab);
-                //         for (var i = 0; i < byteString.length; i++) {
-                //             ia[i] = byteString.charCodeAt(i);
-                //         }
-                //
-                //         var fileType = 'png';
-                //
-                //         if (mimeString == 'image/jpeg' || mimeString == 'image/pjpeg') {
-                //             fileType = 'jpg';
-                //         }
-                //
-                //         $rootScope.fileModel.files.unshift({
-                //             fileId: null,
-                //             clients: {},
-                //             totalDownloads: 0,
-                //             password: '',
-                //             rawFile: {
-                //                 name: 'Clipbboard Image ' + new Date() + '.' + fileType,
-                //                 size: byteString.length,
-                //                 type: mimeString,
-                //                 blobData: new Blob([ab], {type: mimeString})
-                //             }
-                //         });
-                //
-                //         delete data.dataURL;
-                //     });
-                // });
-                //
-                // paste.focus();
-                //
-                // var onPasteListener = function (e) {
-                //     paste.focus();
-                // };
-                // document.body.addEventListener('paste', onPasteListener);
-
-                $scope.$on('$destroy', function (e) {
-                    // paste.remove();
-
+                $scope.$on('$destroy', function () {
                     angular.forEach(rootScopeEvents, function (offDelegate) {
                         offDelegate();
                     });
-
-                    // document.body.removeEventListener( "paste", onPasteListener );
                 });
             }]);
 })();
