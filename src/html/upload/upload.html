@@ -28,14 +28,8 @@
         </div>
 
         <div data-ng-show="getIsFileDropped()">
-            <p class="lead">
-                Copy the link below and send it to a friend to start a peer-to-peer file transfer. Do not close
-                this browser tab to enable peer-to-peer file transfer.
-            </p>
-
             <div class="upload-queue">
                 <div class="upload-queue-item" data-ng-repeat="file in fileModel.files" data-ng-animate>
-
                     <div class="row">
                         <div class="col-sm-2">
                             <div class="bg-primary">
@@ -44,8 +38,7 @@
                         </div>
                         <div class="col-sm-10">
                             <button type="button" class="close pull-right" data-ng-click="removeFile(file.uniqueUrl)">
-                                &times;
-                                <span class="sr-only">Close upload</span>
+                                &times; <span class="sr-only">Remove upload</span>
                             </button>
 
                             <div class="form-group">
@@ -54,7 +47,8 @@
                                 </div>
                                 <div class="clearfix"></div>
 
-                                <input type="text" class="form-control" placeholder="Generating Url..." data-ng-value="file.uniqueUrl" onclick="select()" readonly>
+                                <input type="text" class="form-control" placeholder="Generating Url..."
+                                       data-ng-value="file.uniqueUrl" onclick="select()" readonly>
                             </div>
 
                             <ul class="list-inline text-muted">

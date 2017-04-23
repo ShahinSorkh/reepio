@@ -46,21 +46,6 @@
 
                 var $initializing = true;
 
-                $scope.onClipboardCopied = function (el) {
-                    el = angular.element(el)
-                        .find('.btn-clipboard-label');
-
-                    el.tooltip('enable');
-                    el.tooltip('show');
-
-                    el.on('shown.bs.tooltip', function () {
-                        setTimeout(function () {
-                            el.tooltip('hide');
-                            el.tooltip('disable');
-                        }, 500);
-                    });
-                };
-
                 $scope.$watchCollection('fileModel.files', function (newValue, oldValue) {
                     // wait for next digest cycle
                     if ($initializing) {
