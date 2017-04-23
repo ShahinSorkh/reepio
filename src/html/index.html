@@ -114,7 +114,7 @@
                         </ul>
 
                         <div class="navbar-right col-sm-3"
-                             data-ng-hide="getIsPageActive('/d') || ! downloadId || downloadError">
+                             data-ng-hide="getIsPageActive('/d') || ! downloadId || downloadError || downloadService.downloadState == 'connecting'">
                             <a data-ng-href="/d/{{ downloadId }}">
                                 <div class="well well-sm">
                                     <span data-ng-bind="downloadService.file.name|maxLength:15"></span>
