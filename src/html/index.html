@@ -113,16 +113,13 @@
                             </li>
                         </ul>
 
-                        <div class="navbar-right col-sm-3"
+                        <p class="navbar-text navbar-right"
                              data-ng-hide="getIsPageActive('/d') || ! downloadId || downloadError || downloadService.downloadState == 'connecting'">
                             <a data-ng-href="/d/{{ downloadId }}">
-                                <div class="well well-sm">
-                                    <span data-ng-bind="downloadService.file.name|maxLength:15"></span>
-
-                                    <div data-p2m-progress-bar data-percent="downloadService.file.progress"></div>
-                                </div>
+                                <span data-ng-bind="downloadService.file.name|maxLength:15"></span>
+                                <span data-p2m-progress-bar data-percent="downloadService.file.progress"></span>
                             </a>
-                        </div>
+                        </p>
                     </div>
                 </div>
             </nav>
