@@ -653,7 +653,20 @@ a.lock-file {
   .upload-queue-item {
     padding: 20px;
     background: @well-bg;
-    border-bottom: 1px solid @gray-dark;
+    //border-bottom: 1px solid @gray-dark;
+    border: 2px solid @gray-dark;
+    border-bottom-width: 0;
+
+    &:first-child:last-child {
+      border-radius: 5px;
+    }
+    &:first-child {
+      border-radius: 5px 5px 0 0;
+    }
+    &:last-child {
+      border-radius: 0 0 5px 5px;
+      border-bottom-width: 2px;
+    }
 
     .list-inline li a {
       color: @text-color;
@@ -662,10 +675,6 @@ a.lock-file {
         color: lighten(@gray-light, 15%);
         text-decoration: none;
       }
-    }
-
-    &:last-child {
-      border-bottom: 0;
     }
 
     @media (max-width: @screen-xs-max) {
@@ -741,7 +750,8 @@ a.lock-file {
   }
 
   h4 {
-    color: lighten(@text-muted, 20%)
+    font-weight: @font-weight-light;
+    //color: lighten(@text-muted, 20%)
   }
 
   .form-group {
