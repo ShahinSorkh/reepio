@@ -1,6 +1,6 @@
 {
   "name": "reep.io",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "The official reep.io source code",
   "dependencies": {
     "angular": "^1.5.8",
