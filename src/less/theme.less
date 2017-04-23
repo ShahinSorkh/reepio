@@ -728,8 +728,16 @@ a.lock-file {
   }
 
   input[readonly] {
-    background: @input-bg;
+    background: @gray-dark;
     cursor: pointer;
+    border: 0;
+
+    &:focus {
+      background: @gray-darker;
+      -webkit-box-shadow: none;
+      -moz-box-shadow: none;
+      box-shadow: none;
+    }
   }
 
   h4 {
@@ -738,14 +746,6 @@ a.lock-file {
 
   .form-group {
     margin-bottom: 5px;
-  }
-
-  .btn-clipboard {
-    float: right;
-    position: relative;
-    background: @input-bg;
-    margin-top: -(@btn-clipboard-height + 5);
-    margin-right: 5px;
   }
 }
 
