@@ -655,6 +655,15 @@ a.lock-file {
     background: @well-bg;
     border-bottom: 1px solid @gray-dark;
 
+    .list-inline li a {
+      color: @text-color;
+
+      &:hover {
+        color: lighten(@gray-light, 15%);
+        text-decoration: none;
+      }
+    }
+
     &:last-child {
       border-bottom: 0;
     }

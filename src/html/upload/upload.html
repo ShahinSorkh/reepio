@@ -68,7 +68,7 @@
                                 <li>
                                     <a href="/" data-ng-click="lockFile(file)">
                                         <span class="fa" data-ng-class="{'fa-lock': file.password, 'fa-unlock': ! file.password }"></span>
-                                        <span data-ng-hide="file.password">No Password</span>
+                                        <span data-ng-hide="file.password">Set Password</span>
                                         <span data-ng-show="file.password">
                                             Password: <span data-ng-bind="file.password|limitTo:10"></span>
                                             <span data-ng-show="file.password.length > 10">...</span>
