@@ -118,10 +118,6 @@
                                 $scope.$close($scope.input.password);
                             };
 
-                            $scope.clear = function () {
-								$scope.input.password = "";
-							};
-
                             $scope.close = function () {
                                 $scope.$dismiss('cancel');
                             };
