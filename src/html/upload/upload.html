@@ -47,8 +47,30 @@
                                 </div>
                                 <div class="clearfix"></div>
 
-                                <input type="text" class="form-control" placeholder="Generating Url..."
-                                       data-ng-value="file.uniqueUrl" onclick="select()" readonly>
+                                <!--With clipboard support-->
+                                <div ng-if="isClipboardSupported">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" placeholder="Generating Url..."
+                                               data-ng-value="file.uniqueUrl" onclick="select()" readonly>
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-default btn-clipboard" type="button"
+                                                    ng-disabled="!file.uniqueUrl"
+                                                    ng-click="copyToClipboard(file.uniqueUrl)"
+                                                    uib-tooltip="Copied to clipboard!"
+                                                    tooltip-placement="bottom-right"
+                                                    tooltip-trigger="'click'"
+                                                    tooltip-popup-close-delay="5000">
+                                                <span class="fa fa-clipboard"></span>
+                                            </button>
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <!--No clipboard support-->
+                                <div ng-if="!isClipboardSupported">
+                                    <input type="text" class="form-control" placeholder="Generating Url..."
+                                           data-ng-value="file.uniqueUrl" onclick="select()" readonly>
+                                </div>
                             </div>
 
                             <ul class="list-inline text-muted">
@@ -59,7 +81,7 @@
                                     <span class="fa fa-download"></span>
                                     <span data-ng-bind="file.totalDownloads"></span>x
                                 </li>
-                                <li>
+                                <li ng-if="file.uniqueUrl">
                                     <a href="/" data-ng-click="lockFile(file)">
                                         <span class="fa" data-ng-class="{'fa-lock': file.password, 'fa-unlock': ! file.password }"></span>
                                         <span data-ng-hide="file.password">Set Password</span>

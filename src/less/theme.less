@@ -653,7 +653,6 @@ a.lock-file {
   .upload-queue-item {
     padding: 20px;
     background: @well-bg;
-    //border-bottom: 1px solid @gray-dark;
     border: 2px solid @gray-dark;
     border-bottom-width: 0;
 
@@ -684,6 +683,10 @@ a.lock-file {
           text-decoration: none;
         }
       }
+    }
+
+    .btn-clipboard {
+      .button-variant(#fff; @gray; transparent);
     }
 
     @media (max-width: @screen-xs-max) {
@@ -786,34 +789,6 @@ a.lock-file {
     &, & * {
       pointer-events: none;
     }
-  }
-}
-
-// Clipboard styles
-// ----------------------------
-@btn-clipboard-width: 32px;
-@btn-clipboard-height: 26px;
-
-.btn-clipboard {
-
-  &, .btn-clipboard-label {
-    width: @btn-clipboard-width;
-    height: @btn-clipboard-height;
-  }
-
-  .btn-clipboard-label {
-    display: block;
-    position: absolute;
-    pointer-events: none;
-    margin-top: -(@btn-clipboard-height + 4);
-
-    background: lighten(@input-bg, 10%);
-    border-radius: 3px;
-    padding: 4px 10px;
-  }
-
-  &:hover .btn-clipboard-label {
-    background: lighten(@input-bg, 20%);
   }
 }
 

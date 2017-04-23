@@ -45,8 +45,9 @@
                 }
 
                 var $initializing = true;
+				$scope.isClipboardSupported = typeof document.execCommand !== 'undefined';
 
-                $scope.$watchCollection('fileModel.files', function (newValue, oldValue) {
+				$scope.$watchCollection('fileModel.files', function (newValue, oldValue) {
                     // wait for next digest cycle
                     if ($initializing) {
                         $timeout(function () {
@@ -120,6 +121,13 @@
                             uploadService.setPasswordForFile(file.fileId, '');
                             file.password = '';
                         });
+                };
+
+
+				$scope.copyToClipboard = function (fileUniqueUrl) {
+				    var input = angular.element('input[value=\'' + fileUniqueUrl + '\']');
+					input.select();
+					document.execCommand("Copy");
                 };
 
                 // save unsubscribe functions to be able unsubscribe no destruction of this controller
