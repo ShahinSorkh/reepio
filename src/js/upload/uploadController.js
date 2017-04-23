@@ -118,11 +118,11 @@
                                 $scope.$close($scope.input.password);
                             };
 
-                            $scope.close = function () {
-                                $scope.$dismiss('cancel');
-                            };
-
                             $scope.clear = function () {
+								$scope.input.password = "";
+							};
+
+                            $scope.close = function () {
                                 $scope.$dismiss('cancel');
                             };
                         }]
@@ -130,7 +130,7 @@
 
                     modalInstance.result
                         .then(function (password) {
-                            uploadService.setPasswordForFile(file.fileId, password);
+							uploadService.setPasswordForFile(file.fileId, password);
                             file.password = password;
                         })
                         .catch(function () {

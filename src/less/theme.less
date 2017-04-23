@@ -668,12 +668,21 @@ a.lock-file {
       border-bottom-width: 2px;
     }
 
-    .list-inline li a {
-      color: @text-color;
+    .list-inline {
+      display: flex;
+      flex-flow: row;
 
-      &:hover {
-        color: lighten(@gray-light, 15%);
-        text-decoration: none;
+      li {
+        width: 33%;
+      }
+
+      li a {
+        color: @text-color;
+
+        &:hover, &:focus, &:active {
+          color: lighten(@gray-light, 15%);
+          text-decoration: none;
+        }
       }
     }
 
@@ -690,17 +699,6 @@ a.lock-file {
 
   .media-body {
     width: 100%;
-  }
-
-  ul {
-    margin: 0;
-    padding: 0;
-
-    li {
-      float: left;
-      list-style: none;
-      margin-right: 60px;
-    }
   }
 
   .upload-client-list-item {
