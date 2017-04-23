@@ -25,7 +25,7 @@
     "watch-js": "webpack -w -p",
     "watch-media": "watch 'npm run build-media' 'src/media'",
     "watch": "parallelshell 'npm run watch-html' 'npm run watch-js' 'npm run watch-media'",
-    "start": "parallelshell 'http-server public -a 0.0.0.0 -p 9001 -c-1' 'npm run watch'",
+    "start": "parallelshell 'http-server public -a 0.0.0.0 -p 9001 -c-1 -o' 'npm run watch'",
     "test": "karma start"
   },
   "author": "https://github.com/kodekraftwerk",

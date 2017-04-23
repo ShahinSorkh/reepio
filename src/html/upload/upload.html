@@ -50,7 +50,7 @@
                                 <!--With clipboard support-->
                                 <div ng-if="isClipboardSupported">
                                     <div class="input-group">
-                                        <input type="text" class="form-control" placeholder="Generating Url..."
+                                        <input type="url" class="form-control" placeholder="Generating Url..."
                                                data-ng-value="file.uniqueUrl" onclick="select()" readonly>
                                         <span class="input-group-btn">
                                             <button class="btn btn-default btn-clipboard" type="button"
@@ -68,7 +68,7 @@
 
                                 <!--No clipboard support-->
                                 <div ng-if="!isClipboardSupported">
-                                    <input type="text" class="form-control" placeholder="Generating Url..."
+                                    <input type="url" class="form-control" placeholder="Generating Url..."
                                            data-ng-value="file.uniqueUrl" onclick="select()" readonly>
                                 </div>
                             </div>

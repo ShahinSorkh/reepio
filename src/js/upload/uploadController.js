@@ -62,6 +62,11 @@
 
                         uploadService.registerFile(file.rawFile).then(function (id) {
 							let url = `${$location.protocol()}://${$location.host()}`;
+							let port = $location.port();
+							if(port !== 80 && port !== 443) {
+								url += ":" + port;
+							}
+
 							file.fileId = id.fileId;
 							file.uniqueUrl = `${url}/d/${id.peerId}${id.fileId}`;
                         }, function (err) {
