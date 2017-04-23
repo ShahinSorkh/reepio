@@ -57,9 +57,9 @@
                                                     ng-disabled="!file.uniqueUrl"
                                                     ng-click="copyToClipboard(file.uniqueUrl)"
                                                     uib-tooltip="Copied to clipboard!"
-                                                    tooltip-placement="bottom-right"
-                                                    tooltip-trigger="'click'"
-                                                    tooltip-popup-close-delay="5000">
+                                                    tooltip-placement="left"
+                                                    tooltip-trigger="{'click': 'mouseleave'}"
+                                                    tooltip-popup-close-delay="2000">
                                                 <span class="fa fa-clipboard"></span>
                                             </button>
                                         </span>
