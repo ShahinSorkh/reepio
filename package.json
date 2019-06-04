@@ -21,7 +21,7 @@
     "build-html": "rsync -r src/html/ public/html && rsync src/html/*.html public/",
     "build-js": "webpack -p",
     "build-media": "rsync -r src/media/ public/media",
-    "build": "parallelshell 'npm run build-html' 'npm run build-media' 'npm run build-js'",
+    "build": "npm run build-html && npm run build-media && npm run build-js",
     "watch-html": "watch 'npm run build-html' 'src/html'",
     "watch-js": "webpack -w -p",
     "watch-media": "watch 'npm run build-media' 'src/media'",
