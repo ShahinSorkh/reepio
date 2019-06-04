@@ -1,10 +1,11 @@
+/* globals angular */
 /**
- * Copyright (C) 2014 reep.io 
+ * Copyright (C) 2014 reep.io
  * KodeKraftwerk (https://github.com/KodeKraftwerk/)
  *
- * reep.io source - In-browser peer-to-peer file transfer and streaming 
+ * reep.io source - In-browser peer-to-peer file transfer and streaming
  * made easy
- * 
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -19,33 +20,32 @@
  *  with this program; if not, write to the Free Software Foundation, Inc.,
  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
-(function() {
-    'use strict';
+(function () {
+  'use strict'
 
-    angular.module('static')
+  angular.module('static')
 
-        .config(['$routeProvider', function ($routeProvider) {
-            $routeProvider
-                .when('/about', {
-                    templateUrl: 'html/static/page-about.html',
-                    controller: 'StaticCtrl'
-                })
-                .when('/imprint', {
-                    templateUrl: 'html/static/page-imprint.html',
-                    controller: 'StaticCtrl'
-                })
-                .when('/privacy', {
-                    templateUrl: 'html/static/page-privacy.html',
-                    controller: 'StaticCtrl'
-                })
-                .when('/incompatible', {
-                    templateUrl: 'html/static/page-incompatible.html',
-                    controller: 'StaticCtrl'
-                });
+    .config(['$routeProvider', function ($routeProvider) {
+      $routeProvider
+        .when('/about', {
+          templateUrl: 'html/static/page-about.html',
+          controller: 'StaticCtrl'
+        })
+        .when('/imprint', {
+          templateUrl: 'html/static/page-imprint.html',
+          controller: 'StaticCtrl'
+        })
+        .when('/privacy', {
+          templateUrl: 'html/static/page-privacy.html',
+          controller: 'StaticCtrl'
+        })
+        .when('/incompatible', {
+          templateUrl: 'html/static/page-incompatible.html',
+          controller: 'StaticCtrl'
+        })
+    }])
 
-        }])
-
-        .controller('StaticCtrl', ['$analytics', '$location', function($analytics, $location) {
-            $analytics.pageTrack($location.path());
-        }]);
-})();
+    .controller('StaticCtrl', ['$analytics', '$location', function ($analytics, $location) {
+      $analytics.pageTrack($location.path())
+    }])
+})()

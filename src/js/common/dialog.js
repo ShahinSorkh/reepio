@@ -1,10 +1,11 @@
+/* globals angular */
 /**
- * Copyright (C) 2014 reep.io 
+ * Copyright (C) 2014 reep.io
  * KodeKraftwerk (https://github.com/KodeKraftwerk/)
  *
- * reep.io source - In-browser peer-to-peer file transfer and streaming 
+ * reep.io source - In-browser peer-to-peer file transfer and streaming
  * made easy
- * 
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -19,49 +20,46 @@
  *  with this program; if not, write to the Free Software Foundation, Inc.,
  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
-(function() {
-	'use strict';
+(function () {
+  'use strict'
 
-	angular.module('common')
-		.controller('DialogController', ['$scope', '$element', '$rootScope', function($scope, $element, $rootScope){
-			$rootScope.muteDialogs = false;
+  angular.module('common')
+    .controller('DialogController', ['$scope', '$element', '$rootScope', function ($scope, $element, $rootScope) {
+      $rootScope.muteDialogs = false
 
-			$rootScope.$on('error', function(err, title, message) {
-				$scope.title = title;
-				$scope.message = message;
+      $rootScope.$on('error', function (err, title, message) {
+        if (err) throw err
+        $scope.title = title
+        $scope.message = message
 
-				$scope.visible = true;
-			});
-			
-			$rootScope.showDialog = function(title, message) {
-				$scope.title = title;
-				$scope.message = message;
+        $scope.visible = true
+      })
 
-				$scope.visible = true;				
-			};
+      $rootScope.showDialog = function (title, message) {
+        $scope.title = title
+        $scope.message = message
 
-			$scope.$watch('visible', function(newValue) {
-				if(typeof newValue === 'undefined')
-					return;
+        $scope.visible = true
+      }
 
-				if($rootScope.muteDialogs === true)
-					return;
+      $scope.$watch('visible', function (newValue) {
+        if (typeof newValue === 'undefined') { return }
 
-				$element.modal({
-					show: newValue
-				});
-			});
+        if ($rootScope.muteDialogs === true) { return }
 
-			$rootScope.$watch('muteDialogs', function(newValue) {
-				if(typeof newValue === 'undefined')
-					return;
+        $element.modal({
+          show: newValue
+        })
+      })
 
-				if(newValue === true)
-				{
-					$element.modal({
-						show: false
-					});
-				}
-			});
-		}]);
-})();
+      $rootScope.$watch('muteDialogs', function (newValue) {
+        if (typeof newValue === 'undefined') { return }
+
+        if (newValue === true) {
+          $element.modal({
+            show: false
+          })
+        }
+      })
+    }])
+})()

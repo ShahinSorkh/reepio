@@ -1,10 +1,11 @@
+/* globals angular, FileReader */
 /**
- * Copyright (C) 2014 reep.io 
+ * Copyright (C) 2014 reep.io
  * KodeKraftwerk (https://github.com/KodeKraftwerk/)
  *
- * reep.io source - In-browser peer-to-peer file transfer and streaming 
+ * reep.io source - In-browser peer-to-peer file transfer and streaming
  * made easy
- * 
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -19,107 +20,100 @@
  *  with this program; if not, write to the Free Software Foundation, Inc.,
  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
-(function() {
-	'use strict';
+(function () {
+  'use strict'
 
-	angular.module('upload')
-		.directive('p2mDropZone', ['$animate', '$document', function ($animate, $document) {
+  angular.module('upload')
+    .directive('p2mDropZone', ['$animate', '$document', function ($animate, $document) {
+      function checkIfFolder (scope, files, el) {
+        var length = (files.length < scope.maxFiles) ? files.length : scope.maxFiles
 
-            function checkIfFolder(scope, files, el){
-                var length = (files.length < scope.maxFiles) ? files.length : scope.maxFiles;
-
-                for(var i = 0; i < length; i++)
-                {
-                    var file = files[i];
-                    if (file.size > 1048576){
-                        addFile(scope, file, el);
-                    }else{
-                        var reader = new FileReader();
-                        reader.onload = function (file) {
-                            addFile(scope, file, el);
-						}.bind(null, file);
-                        reader.onerror = function(){
-                            if(scope.files.length > 0)
-                                $animate.addClass(el, 'ng-hide');
-                        };
-                        reader.readAsArrayBuffer(file);
-                    }
-                }
+        for (var i = 0; i < length; i++) {
+          var file = files[i]
+          if (file.size > 1048576) {
+            addFile(scope, file, el)
+          } else {
+            var reader = new FileReader()
+            reader.onload = function (file) {
+              addFile(scope, file, el)
+            }.bind(null, file)
+            reader.onerror = function () {
+              if (scope.files.length > 0) { $animate.addClass(el, 'ng-hide') }
             }
+            reader.readAsArrayBuffer(file)
+          }
+        }
+      }
 
-			function addFile(scope, file, el) {
-				if(file.size <= 0)
-					return;
+      function addFile (scope, file, el) {
+        if (file.size <= 0) { return }
 
-                file = {
-                    rawFile: file,
-                    fileId: null,
-                    clients: {},
-                    totalDownloads:  0,
-                    password: ''
-                };
+        file = {
+          rawFile: file,
+          fileId: null,
+          clients: {},
+          totalDownloads: 0,
+          password: ''
+        }
 
-                scope.files.unshift(file);
+        scope.files.unshift(file)
 
-                if(scope.files.length > scope.maxFiles)
-                {
-                    scope.files.pop();
-                }
+        if (scope.files.length > scope.maxFiles) {
+          scope.files.pop()
+        }
 
-                $animate.addClass(el, 'ng-hide');
-                scope.$apply();
-			}
+        $animate.addClass(el, 'ng-hide')
+        scope.$apply()
+      }
 
-			return {
-				restrict: 'A',
-				scope: {
-					files: '=',
-					maxFiles: '=?'
-				},
-				link: function (scope, el) {
+      return {
+        restrict: 'A',
+        scope: {
+          files: '=',
+          maxFiles: '=?'
+        },
+        link: function (scope, el) {
+          var $el = angular.element(el)
 
-					var $el = angular.element(el);
+          scope.maxFiles = scope.maxFiles || 5
 
-					scope.maxFiles = scope.maxFiles || 5;
+          $document.bind('dragover', function (e) {
+            e.stopPropagation()
+            e.preventDefault()
 
-					$document.bind('dragover', function (e) {
-						e.stopPropagation();
-						e.preventDefault();
-						
-						$animate.removeClass($el, 'ng-hide');
-					});
+            $animate.removeClass($el, 'ng-hide')
+          })
 
-					$document.bind('dragleave', function (e) {
-						e.stopPropagation();
-						e.preventDefault();
-						
-                        if(scope.files.length > 0)
-						    $animate.addClass($el, 'ng-hide');
-					});
+          $document.bind('dragleave', function (e) {
+            e.stopPropagation()
+            e.preventDefault()
 
-					$el.after('<input type="file" style="display: none" multiple>');
+            if (scope.files.length > 0) { $animate.addClass($el, 'ng-hide') }
+          })
 
-					$el.next().on('change', function () {
-                        checkIfFolder(scope, this.files, $el);
-					});
+          $el.after('<input type="file" style="display: none" multiple>')
 
-					$el.on('click', function () {
-						$el.next().trigger('click');
-					});
+          $el.next().on('change', function () {
+            checkIfFolder(scope, this.files, $el)
+          })
 
-					return $document.bind('drop', function (e) {
-						e.stopPropagation();
-						e.preventDefault();
+          $el.on('click', function () {
+            $el.next().trigger('click')
+          })
 
-					    $animate.addClass($el, 'ng-hide');
-						
-						var files = e.originalEvent.dataTransfer.files || [];
-                        checkIfFolder(scope, files, $el);
+          return $document.bind('drop', function (e) {
+            e.stopPropagation()
+            e.preventDefault()
 
-						e.preventDefault();
-						return false;
-					});
-				}
-			};
-		}]);
-})();
+            $animate.addClass($el, 'ng-hide')
+
+            var files = e.originalEvent.dataTransfer.files || []
+            checkIfFolder(scope, files, $el)
+
+            e.preventDefault()
+            return false
+          })
+        }
+      }
+    }])
+})()

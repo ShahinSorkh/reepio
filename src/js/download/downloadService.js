@@ -1,10 +1,11 @@
+/* globals angular, FileReader, MediaSource */
 /**
- * Copyright (C) 2014 reep.io 
+ * Copyright (C) 2014 reep.io
  * KodeKraftwerk (https://github.com/KodeKraftwerk/)
  *
- * reep.io source - In-browser peer-to-peer file transfer and streaming 
+ * reep.io source - In-browser peer-to-peer file transfer and streaming
  * made easy
- * 
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -19,339 +20,336 @@
  *  with this program; if not, write to the Free Software Foundation, Inc.,
  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
-(function() {
-    angular.module('download')
-        .service('downloadService', ['config', '$q', 'peeringService', 'randomService', '$rootScope', 'storageService', function (config, $q, peeringService, randomService, $rootScope, storageService) {
+(function () {
+  angular.module('download')
+    .service('downloadService', ['config', '$q', 'peeringService', 'randomService', '$rootScope', 'storageService', function (config, $q, peeringService, randomService, $rootScope, storageService) {
+      this.id = null
 
-            this.id = null;
+      this.connection = null
 
-            this.connection = null;
+      this.file = {
+        name: '',
+        type: '',
+        size: 0,
+        totalChunksToReceive: 0,
+        chunksReceived: 0,
+        chunksOfCurrentBlockReceived: 0,
+        downloadedChunksSinceLastCalculate: 0,
+        progress: 0,
+        noFileSystem: false,
+        isStreamAble: false
+      }
 
-            this.file = {
-                name: '',
-                type: '',
-                size: 0,
-                totalChunksToReceive: 0,
-                chunksReceived: 0,
-                chunksOfCurrentBlockReceived: 0,
-                downloadedChunksSinceLastCalculate: 0,
-                progress: 0,
-                noFileSystem: false,
-                isStreamAble: false
-            };
+      this.streamBuffer = []
+      this.isStream = false
+      this.isStreamingRunning = false
+      this.intervalProgress = null
 
-            this.streamBuffer = [];
-            this.isStream = false;
-            this.isStreamingRunning = false;
-            this.intervalProgress = null;
+      this.downloadState = 'connecting'
+      $rootScope.$emit('DownloadStateChanged', this.downloadState)
 
-            this.downloadState = 'connecting';
-			$rootScope.$emit('DownloadStateChanged', this.downloadState);
+      this.requestFileInformation = function (id) {
+        if (this.id !== null) {
+          return
+        }
 
-            this.requestFileInformation = function(id){
-                if(this.id !== null){
-                    return;
-                }
+        this.id = this.parseId(id)
 
-                this.id = this.parseId(id);
+        peeringService
+          .getPeer()
+          .then(function (peer) {
+            this.connection = peer.connect(this.id.uploaderId, {
+              reliable: true
+            })
 
-                peeringService
-					.getPeer()
-					.then(function(peer){
-						this.connection = peer.connect(this.id.uploaderId, {
-							reliable: true
-						});
+            this.connection.on('close', function (e) {
+              $rootScope.$emit('DownloadDataChannelClose')
+            })
 
-						this.connection.on('close', function(e){
-							$rootScope.$emit('DownloadDataChannelClose');
-						});
+            this.connection.on('data', function (data) {
+              if (data instanceof ArrayBuffer) {
+                this.__onPacketFileData(data)
+                return
+              }
 
-						this.connection.on('data', function(data){
-							if(data instanceof ArrayBuffer){
-								this.__onPacketFileData(data);
-								return;
-							}
+              var fn = this['__onPacket' + data.packet]
 
-							var fn = this['__onPacket' + data.packet];
+              if (typeof fn === 'function') {
+                fn = fn.bind(this)
+                fn(data)
+              }
+            }.bind(this))
 
-							if(typeof fn === 'function') {
-								fn = fn.bind(this);
-								fn(data);
-							}
-						}.bind(this));
-
-						this.connection.on('open', function(){
-							if(this.file.name.length == 0){
-								this.connection.send({
-									packet: 'RequestFileInformation',
-									fileId: this.id.fileId
-								});
-							}
-						}.bind(this));
-
-						this.connection.on('error', function(e){
-							$rootScope.$emit('DownloadDataChannelClose');
-						});
-
-						peer.on('error', function(e){
-							$rootScope.$emit('DownloadDataChannelClose');
-						});
-					}.bind(this));
-            };
-
-            this.parseId = function(id){
-                if ( id.hasOwnProperty('uploaderId') ) {
-                    return id;
-                }
-
-                return {
-                    uploaderId: id.substring(0, config.peerIdLength),
-                    fileId: id.substring(config.peerIdLength, config.peerIdLength+config.fileIdLength)
-                }
-            };
-
-            this.startDownload = function(){
-                if(this.file.name.length == 0){
-                    return;
-                }
-
-                this.downloadState = 'inprogress';
-				$rootScope.$emit('DownloadStateChanged', this.downloadState);
-
-                this.intervalProgress = setInterval(this.progressCalculations.bind(this), 1000);
-                var self = this;
-                storageService.getStorageForFile(this.file.name, this.file.size).then(
-                    function(fileIdentifier){
-                        this.file.fileIdentifier = fileIdentifier;
-
-                        var fileEntry = storageService.getFileEntry(fileIdentifier);
-
-                        if(self.isStream){
-                            if(fileEntry !== undefined){
-                                fileEntry.file(function(file) {
-                                    var reader = new FileReader();
-
-                                    reader.onloadend = function(e) {
-                                        self.appendChunkToStream(this.result);
-                                        self.requestBlock(self.file.chunksReceived);
-                                    };
-
-                                    reader.readAsArrayBuffer(file);
-                                }, function(){});
-
-                                return;
-                            }
-                        }
-
-                        this.requestBlock(this.file.chunksReceived);
-                    }.bind(this),
-                    function(fileIdentifier){
-                        this.file.fileIdentifier = fileIdentifier;
-                        this.file.noFileSystem = true;
-                        this.requestBlock(0);
-
-                        $rootScope.$emit('NoFileSystem', this.file);
-                    }.bind(this)
-                );
-            };
-
-            this.startStream = function(){
-                this.video = document.querySelector('video');
-                this.mediaSource = new MediaSource();
-                this.video.src = window.URL.createObjectURL(this.mediaSource);
-
-                this.mediaSource.addEventListener('sourceopen', function(){
-                    this.sourceBuffer = this.mediaSource.addSourceBuffer(this.getCodecToType(this.file.type));
-                    this.startDownload();
-
-                    this.sourceBuffer.addEventListener('updateend', function(e) {
-                        if(this.streamBuffer.length > 0){
-                            this.appendChunkToStream(this.streamBuffer.shift());
-                        }else{
-                            this.streamInterval = setInterval(function(){
-                                if(this.streamBuffer.length > 0){
-                                    this.appendChunkToStream(this.streamBuffer.shift());
-                                    clearInterval(this.streamInterval);
-                                }
-                            }.bind(this), 50);
-                        }
-                    }.bind(this));
-
-                    this.sourceBuffer.addEventListener('error', function(e){console.log(e);});
-                }.bind(this), false);
-                this.mediaSource.addEventListener('error', function(e) { console.log(e);});
-
-                this.isStreamingRunning = true;
-                this.isStream = true;
-            };
-
-            this.appendChunkToStream = function(chunk){
-                try{
-                    this.sourceBuffer.appendBuffer(new Uint8Array(chunk));
-                }catch(e){
-                    this.abortStream();
-                }
-            };
-
-            this.abortStream = function(){
-                this.isStream = false;
-                this.isStreamingRunning = false;
-                this.streamBuffer = [];
-//                clearInterval(this.intervalProgress);
-                clearInterval(this.streamInterval);
-//                this.cancelUpload();
-                $rootScope.$emit('errorPlayingStream');
-            };
-
-            this.progressCalculations = function(){
-
-                this.file.bytesPerSecond = (this.file.downloadedChunksSinceLastCalculate * config.chunkSize);
-
-                $rootScope.$emit('intervalCalculations', this.file.bytesPerSecond, this.file.progress);
-
+            this.connection.on('open', function () {
+              if (this.file.name.length === 0) {
                 this.connection.send({
-                    packet: 'DownloadProgress',
-                    bytesPerSecond: this.file.bytesPerSecond,
-                    percent: this.file.progress,
-                    fileId: this.id.fileId
-                });
+                  packet: 'RequestFileInformation',
+                  fileId: this.id.fileId
+                })
+              }
+            }.bind(this))
 
-                this.file.downloadedChunksSinceLastCalculate = 0;
-            };
+            this.connection.on('error', function (e) {
+              $rootScope.$emit('DownloadDataChannelClose')
+            })
 
-            this.requestBlock = function(chunkPosition){
-                this.connection.send({
-                    packet: 'RequestBlock',
-                    fileId: this.id.fileId,
-                    chunkPosition: chunkPosition
-                });
-            };
+            peer.on('error', function (e) {
+              $rootScope.$emit('DownloadDataChannelClose')
+            })
+          }.bind(this))
+      }
 
-            this.doAuthentication = function(password){
-                this.connection.send({
-                    packet: 'Authenticate',
-                    password: password,
-                    fileId: this.id.fileId
-                });
-            };
+      this.parseId = function (id) {
+        if (id.hasOwnProperty('uploaderId')) {
+          return id
+        }
 
-            this.isStreamAble = function(type){
-                window.MediaSource = window.MediaSource || window.WebKitMediaSource;
+        return {
+          uploaderId: id.substring(0, config.peerIdLength),
+          fileId: id.substring(config.peerIdLength, config.peerIdLength + config.fileIdLength)
+        }
+      }
 
-                if(window.MediaSource === undefined){
-                    return false;
+      this.startDownload = function () {
+        if (this.file.name.length === 0) {
+          return
+        }
+
+        this.downloadState = 'inprogress'
+        $rootScope.$emit('DownloadStateChanged', this.downloadState)
+
+        this.intervalProgress = setInterval(this.progressCalculations.bind(this), 1000)
+        var self = this
+        storageService.getStorageForFile(this.file.name, this.file.size).then(
+          function (fileIdentifier) {
+            this.file.fileIdentifier = fileIdentifier
+
+            var fileEntry = storageService.getFileEntry(fileIdentifier)
+
+            if (self.isStream) {
+              if (fileEntry !== undefined) {
+                fileEntry.file(function (file) {
+                  var reader = new FileReader()
+
+                  reader.onloadend = function (e) {
+                    self.appendChunkToStream(this.result)
+                    self.requestBlock(self.file.chunksReceived)
+                  }
+
+                  reader.readAsArrayBuffer(file)
+                }, function () {})
+
+                return
+              }
+            }
+
+            this.requestBlock(this.file.chunksReceived)
+          }.bind(this),
+          function (fileIdentifier) {
+            this.file.fileIdentifier = fileIdentifier
+            this.file.noFileSystem = true
+            this.requestBlock(0)
+
+            $rootScope.$emit('NoFileSystem', this.file)
+          }.bind(this)
+        )
+      }
+
+      this.startStream = function () {
+        this.video = document.querySelector('video')
+        this.mediaSource = new MediaSource()
+        this.video.src = window.URL.createObjectURL(this.mediaSource)
+
+        this.mediaSource.addEventListener('sourceopen', function () {
+          this.sourceBuffer = this.mediaSource.addSourceBuffer(this.getCodecToType(this.file.type))
+          this.startDownload()
+
+          this.sourceBuffer.addEventListener('updateend', function (e) {
+            if (this.streamBuffer.length > 0) {
+              this.appendChunkToStream(this.streamBuffer.shift())
+            } else {
+              this.streamInterval = setInterval(function () {
+                if (this.streamBuffer.length > 0) {
+                  this.appendChunkToStream(this.streamBuffer.shift())
+                  clearInterval(this.streamInterval)
                 }
+              }.bind(this), 50)
+            }
+          }.bind(this))
 
-                return MediaSource.isTypeSupported(this.getCodecToType(type));
-            };
+          this.sourceBuffer.addEventListener('error', function (e) { console.log(e) })
+        }.bind(this), false)
+        this.mediaSource.addEventListener('error', function (e) { console.log(e) })
 
-            this.getCodecToType = function(type){
-                if(type == 'video/mp4'){
-                    return 'video/mp4; codecs="avc1.42E01E, mp4a.40.2"';
-                }
+        this.isStreamingRunning = true
+        this.isStream = true
+      }
 
-                if(type == 'video/ogg'){
-                    return 'video/ogg; codecs="theora, vorbis"';
-                }
+      this.appendChunkToStream = function (chunk) {
+        try {
+          this.sourceBuffer.appendBuffer(new Uint8Array(chunk))
+        } catch (e) {
+          this.abortStream()
+        }
+      }
 
-                if(type == 'video/webm'){
-                    return 'video/webm; codecs="vorbis, vp8, vp9"';
-                }
+      this.abortStream = function () {
+        this.isStream = false
+        this.isStreamingRunning = false
+        this.streamBuffer = []
+        //                clearInterval(this.intervalProgress);
+        clearInterval(this.streamInterval)
+        //                this.cancelUpload();
+        $rootScope.$emit('errorPlayingStream')
+      }
 
-                return 'No codec found';
-            };
+      this.progressCalculations = function () {
+        this.file.bytesPerSecond = (this.file.downloadedChunksSinceLastCalculate * config.chunkSize)
 
-            this.__onPacketFileData = function(data){
-                if(this.isStream){
-                    if(this.file.chunksReceived == 0){
-                        this.appendChunkToStream(data);
-                    }else{
-                        this.streamBuffer.push(data);
-                    }
-                }
+        $rootScope.$emit('intervalCalculations', this.file.bytesPerSecond, this.file.progress)
 
-                this.file.chunksReceived++;
-                this.file.chunksOfCurrentBlockReceived++;
-                this.file.downloadedChunksSinceLastCalculate++;
-				this.file.progress = (this.file.chunksReceived / this.file.totalChunksToReceive) * 100;
+        this.connection.send({
+          packet: 'DownloadProgress',
+          bytesPerSecond: this.file.bytesPerSecond,
+          percent: this.file.progress,
+          fileId: this.id.fileId
+        })
 
-				if(this.file.chunksReceived !== this.file.totalChunksToReceive && (this.file.chunksOfCurrentBlockReceived % config.chunksPerBlock) == 0)
-				{
-					this.file.chunksOfCurrentBlockReceived = 0;
-					this.requestBlock(this.file.chunksReceived);
-				}
+        this.file.downloadedChunksSinceLastCalculate = 0
+      }
 
-                storageService.addChunkToFileBuffer(this.file.fileIdentifier, data);
+      this.requestBlock = function (chunkPosition) {
+        this.connection.send({
+          packet: 'RequestBlock',
+          fileId: this.id.fileId,
+          chunkPosition: chunkPosition
+        })
+      }
 
-                if(this.file.chunksReceived == this.file.totalChunksToReceive){
-                    storageService.getUrlForFinishedDownload(this.file.fileIdentifier).then(
-                        function(url){
-                            clearInterval(this.intervalProgress);
-                            this.progressCalculations();
-                            this.file.fileSystemUrl = url;
-                            this.downloadState = 'finished';
-							$rootScope.$emit('DownloadStateChanged', this.downloadState);
+      this.doAuthentication = function (password) {
+        this.connection.send({
+          packet: 'Authenticate',
+          password: password,
+          fileId: this.id.fileId
+        })
+      }
 
-                            $rootScope.$emit('DownloadFinished');
+      this.isStreamAble = function (type) {
+        window.MediaSource = window.MediaSource || window.WebKitMediaSource
 
-                            this.connection.send({
-                                packet: 'DownloadFinished',
-                                fileId: this.id.fileId
-                            });
-                        }.bind(this)
-                    );
-                }
-            };
+        if (window.MediaSource === undefined) {
+          return false
+        }
 
-            this.__onPacketAuthenticationSuccessfull = function(data){
-                $rootScope.$emit('AuthenticationSuccessfull');
-            };
+        return MediaSource.isTypeSupported(this.getCodecToType(type))
+      }
 
-            this.__onPacketIncorrectPassword = function(data){
-                $rootScope.$emit('IncorrectPassword');
-            };
+      this.getCodecToType = function (type) {
+        if (type === 'video/mp4') {
+          return 'video/mp4; codecs="avc1.42E01E, mp4a.40.2"'
+        }
 
-            this.__onPacketFileInformation = function(data){
-                this.file.name = data.fileName;
-                this.file.size = data.fileSize;
-                this.file.type = data.fileType;
-                this.file.isStreamAble = this.isStreamAble(data.fileType);
-                this.file.totalChunksToReceive = Math.ceil(data.fileSize / config.chunkSize);
+        if (type === 'video/ogg') {
+          return 'video/ogg; codecs="theora, vorbis"'
+        }
 
-                this.downloadState = 'ready';
-				$rootScope.$emit('DownloadStateChanged', this.downloadState);
+        if (type === 'video/webm') {
+          return 'video/webm; codecs="vorbis, vp8, vp9"'
+        }
 
-                storageService.checkIfFileExits(data.fileName, data.fileSize).then(
-                    function(metaData){
-                        this.file.chunksReceived = Math.ceil(metaData.size / config.chunkSize);
-                        this.file.progress = (this.file.chunksReceived / this.file.totalChunksToReceive) * 100;
+        return 'No codec found'
+      }
 
-                        if(this.file.progress == 100){
-                            storageService.getUrlForFinishedDownload(storageService.generateFileIdentifier(data.fileName, data.fileSize)).then(
-                                function(url){
-                                    this.downloadState = 'finished';
-									$rootScope.$emit('DownloadStateChanged', this.downloadState);
+      this.__onPacketFileData = function (data) {
+        if (this.isStream) {
+          if (this.file.chunksReceived === 0) {
+            this.appendChunkToStream(data)
+          } else {
+            this.streamBuffer.push(data)
+          }
+        }
 
-                                    this.file.fileSystemUrl = url;
+        this.file.chunksReceived++
+        this.file.chunksOfCurrentBlockReceived++
+        this.file.downloadedChunksSinceLastCalculate++
+        this.file.progress = (this.file.chunksReceived / this.file.totalChunksToReceive) * 100
 
-                                    $rootScope.$emit('FileInformation',  this.file);
-                                }.bind(this)
-                            );
-                        }else{
-                            $rootScope.$emit('FileInformation',  this.file);
-                        }
-                    }.bind(this),
-                    function(){
-                        $rootScope.$emit('FileInformation',  this.file);
-                    }
-                );
-            };
+        if (this.file.chunksReceived !== this.file.totalChunksToReceive && (this.file.chunksOfCurrentBlockReceived % config.chunksPerBlock) === 0) {
+          this.file.chunksOfCurrentBlockReceived = 0
+          this.requestBlock(this.file.chunksReceived)
+        }
 
-            this.__onPacketAuthenticationRequest = function(data){
-                this.downloadState = 'authentication';
-				$rootScope.$emit('DownloadStateChanged', this.downloadState);
+        storageService.addChunkToFileBuffer(this.file.fileIdentifier, data)
 
-                $rootScope.$emit('AuthenticationRequest');
-            };
-        }]);
-})();
+        if (this.file.chunksReceived === this.file.totalChunksToReceive) {
+          storageService.getUrlForFinishedDownload(this.file.fileIdentifier).then(
+            function (url) {
+              clearInterval(this.intervalProgress)
+              this.progressCalculations()
+              this.file.fileSystemUrl = url
+              this.downloadState = 'finished'
+              $rootScope.$emit('DownloadStateChanged', this.downloadState)
+
+              $rootScope.$emit('DownloadFinished')
+
+              this.connection.send({
+                packet: 'DownloadFinished',
+                fileId: this.id.fileId
+              })
+            }.bind(this)
+          )
+        }
+      }
+
+      this.__onPacketAuthenticationSuccessfull = function (data) {
+        $rootScope.$emit('AuthenticationSuccessfull')
+      }
+
+      this.__onPacketIncorrectPassword = function (data) {
+        $rootScope.$emit('IncorrectPassword')
+      }
+
+      this.__onPacketFileInformation = function (data) {
+        this.file.name = data.fileName
+        this.file.size = data.fileSize
+        this.file.type = data.fileType
+        this.file.isStreamAble = this.isStreamAble(data.fileType)
+        this.file.totalChunksToReceive = Math.ceil(data.fileSize / config.chunkSize)
+
+        this.downloadState = 'ready'
+        $rootScope.$emit('DownloadStateChanged', this.downloadState)
+
+        storageService.checkIfFileExits(data.fileName, data.fileSize).then(
+          function (metaData) {
+            this.file.chunksReceived = Math.ceil(metaData.size / config.chunkSize)
+            this.file.progress = (this.file.chunksReceived / this.file.totalChunksToReceive) * 100
+
+            if (this.file.progress === 100) {
+              storageService.getUrlForFinishedDownload(storageService.generateFileIdentifier(data.fileName, data.fileSize)).then(
+                function (url) {
+                  this.downloadState = 'finished'
+                  $rootScope.$emit('DownloadStateChanged', this.downloadState)
+
+                  this.file.fileSystemUrl = url
+
+                  $rootScope.$emit('FileInformation', this.file)
+                }.bind(this)
+              )
+            } else {
+              $rootScope.$emit('FileInformation', this.file)
+            }
+          }.bind(this),
+          function () {
+            $rootScope.$emit('FileInformation', this.file)
+          }
+        )
+      }
+
+      this.__onPacketAuthenticationRequest = function (data) {
+        this.downloadState = 'authentication'
+        $rootScope.$emit('DownloadStateChanged', this.downloadState)
+
+        $rootScope.$emit('AuthenticationRequest')
+      }
+    }])
+})()

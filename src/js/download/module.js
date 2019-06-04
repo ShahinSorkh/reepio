@@ -1,10 +1,11 @@
+/* globals angular */
 /**
- * Copyright (C) 2014 reep.io 
+ * Copyright (C) 2014 reep.io
  * KodeKraftwerk (https://github.com/KodeKraftwerk/)
  *
- * reep.io source - In-browser peer-to-peer file transfer and streaming 
+ * reep.io source - In-browser peer-to-peer file transfer and streaming
  * made easy
- * 
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -19,8 +20,8 @@
  *  with this program; if not, write to the Free Software Foundation, Inc.,
  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
-(function() {
-    'use strict';
+(function () {
+  'use strict'
 
-    angular.module('download', ['ngRoute', 'stringFilters', 'fileIcon', 'progressBar', 'common']);
-})();
+  angular.module('download', ['ngRoute', 'stringFilters', 'fileIcon', 'progressBar', 'common'])
+})()

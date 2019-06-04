@@ -1,3 +1,5 @@
+/* globals inject */
+/* eslint-env node, jasmine */
 /**
  * Copyright (C) 2014 reep.io
  * KodeKraftwerk (https://github.com/KodeKraftwerk/)
@@ -20,33 +22,30 @@
  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 (function () {
-    'use strict';
+  'use strict'
 
-    describe('peeringService tests', function () {
+  describe('peeringService tests', function () {
+    beforeEach(function () {
+      module('peertome')
+    })
 
-        beforeEach(function () {
-            module('peertome');
-        });
+    describe('peeringService.getPeer() service unavailable tests', function () {
+      // var peeringService, config
 
-        describe('peeringService.getPeer() service unavailable tests', function () {
-            var peeringService, config;
+      beforeEach(inject(function ($injector, config) {
+        config.port = 65535
+      }))
 
-            beforeEach(inject(function ($injector, config) {
-                config.port = 65535;
-            }));
-
-            it('should throw an exception when peering-server is not available', inject(function (config, peeringService) {
-                peeringService.config = config;
-                peeringService.getPeer()
-                    .then(function (id) {
-                        console.log(id);
-                    },
-                    function (err) {
-                        expect(err).toBeDefined();
-                    });
-
-            }));
-
-        });
-    });
-})();
+      it('should throw an exception when peering-server is not available', inject(function (config, peeringService) {
+        peeringService.config = config
+        peeringService.getPeer()
+          .then(function (id) {
+            console.log(id)
+          },
+          function (err) {
+            expect(err).toBeDefined()
+          })
+      }))
+    })
+  })
+})()

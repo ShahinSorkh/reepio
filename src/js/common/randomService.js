@@ -1,10 +1,11 @@
+/* globals angular */
 /**
- * Copyright (C) 2014 reep.io 
+ * Copyright (C) 2014 reep.io
  * KodeKraftwerk (https://github.com/KodeKraftwerk/)
  *
- * reep.io source - In-browser peer-to-peer file transfer and streaming 
+ * reep.io source - In-browser peer-to-peer file transfer and streaming
  * made easy
- * 
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -19,27 +20,25 @@
  *  with this program; if not, write to the Free Software Foundation, Inc.,
  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
-(function() {
-    angular.module('common')
-        .service('randomService', [function () {
-            this.defaultLength = 6;
+(function () {
+  angular.module('common')
+    .service('randomService', [function () {
+      this.defaultLength = 6
 
-            /**
+      /**
              * Generates a random string
              * @param {number} length
              * @returns {string}
              */
-            this.generateString = function(length){
-                if( ! length)
-                    length = this.defaultLength;
+      this.generateString = function (length) {
+        if (!length) { length = this.defaultLength }
 
-                var text = "";
-                var possible = "abcdefghijklmnopqrstuvwxyz0123456789";
+        var text = ''
+        var possible = 'abcdefghijklmnopqrstuvwxyz0123456789'
 
-                for( var i=0; i < length; i++ )
-                    text += possible.charAt(Math.floor(Math.random() * possible.length));
+        for (var i = 0; i < length; i++) { text += possible.charAt(Math.floor(Math.random() * possible.length)) }
 
-                return text;
-            }
-        }]);
-})();
+        return text
+      }
+    }])
+})()

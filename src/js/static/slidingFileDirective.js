@@ -1,12 +1,12 @@
 import angular from 'angular';
 
 /**
- * Copyright (C) 2014 reep.io 
+ * Copyright (C) 2014 reep.io
  * KodeKraftwerk (https://github.com/KodeKraftwerk/)
  *
- * reep.io source - In-browser peer-to-peer file transfer and streaming 
+ * reep.io source - In-browser peer-to-peer file transfer and streaming
  * made easy
- * 
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -21,31 +21,31 @@ import angular from 'angular';
  *  with this program; if not, write to the Free Software Foundation, Inc.,
  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
-(function() {
-	'use strict';	
-	
-	angular.module('static')
-		.directive('reepioSlidingFile', ['$document', function ($document) {
-			return {
-				restrict: 'EA',
-				template: 	'<div class="sliding-file" data-ng-class="{ \'is-sliding\': scrollTop > .05 && scrollTop < 0.95, \'is-static\': scrollTop >= 1 }">' +
-								'<span class="fa fa-file"></span>' +
-							'</div>',
-				scope: {
-					scrollMax: '=?'					
-				},
-				link: function (scope, iElement, iAttrs) {
-					var el = angular.element(iElement);
-					
-					scope.isSliding = false;
-					scope.scrollMax = scope.scrollMax || 100;
-					
-					$document.on('scroll', function(e) {
-						scope.$apply(function() {
-							scope.scrollTop = $document.scrollTop() / scope.scrollMax;
-						});
-					});
-				}
-			};
-		}])	
-})();
+(function () {
+  'use strict'
+
+  angular.module('static')
+    .directive('reepioSlidingFile', ['$document', function ($document) {
+      return {
+        restrict: 'EA',
+        template: '<div class="sliding-file" data-ng-class="{ \'is-sliding\': scrollTop > .05 && scrollTop < 0.95, \'is-static\': scrollTop >= 1 }">' +
+          '<span class="fa fa-file"></span>' +
+          '</div>',
+        scope: {
+          scrollMax: '=?'
+        },
+        link: function (scope, iElement, iAttrs) {
+          // var el = angular.element(iElement)
+
+          scope.isSliding = false
+          scope.scrollMax = scope.scrollMax || 100
+
+          $document.on('scroll', function (e) {
+            scope.$apply(function () {
+              scope.scrollTop = $document.scrollTop() / scope.scrollMax
+            })
+          })
+        }
+      }
+    }])
+})()
