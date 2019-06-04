@@ -1,4 +1,7 @@
 # reep.io
+[![Build Status](https://api.travis-ci.org/ShahinSorkh/reepio.svg?branch=master)](https://travis-ci.org/ShahinSorkh/reepio)
+
+
 A browser based peer-to-peer file transfer platform.
 ~~It is running at [https://reep.io](https://reep.io)~~
 
