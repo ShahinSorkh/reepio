@@ -7,8 +7,5 @@ module.exports = {
   globals: {
     angular: false,
     swfobject: true
-  },
-  ignore: [
-    'abandonedlibs'
-  ]
+  }
 };
