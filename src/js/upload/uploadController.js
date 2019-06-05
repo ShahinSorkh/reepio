@@ -1,4 +1,4 @@
-/* globals $, angular, util */
+import { util } from 'peerjs'
 /**
  * Copyright (C) 2014 reep.io
  * KodeKraftwerk (https://github.com/KodeKraftwerk/)

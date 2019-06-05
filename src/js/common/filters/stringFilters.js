@@ -1,4 +1,3 @@
-/* globals angular */
 /**
  * Copyright (C) 2014 reep.io
  * KodeKraftwerk (https://github.com/KodeKraftwerk/)

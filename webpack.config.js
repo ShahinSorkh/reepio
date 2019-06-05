@@ -12,8 +12,9 @@ let plugins = [
   new webpack.ProvidePlugin({
     $: 'jquery',
     jQuery: 'jquery',
-    Peer: 'peerjs/lib/peer',
-    util: 'peerjs/lib/util'
+    swfobject: path.resolve(
+      __dirname, 'abandonedlibs', 'swfobject', 'swfobject', 'swfobject'
+    )
   }),
   new webpack.DefinePlugin({
     APP_ENV: JSON.stringify(env),

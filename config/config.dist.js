@@ -1,11 +1,11 @@
 module.exports = {
-  'debug': false,
-  'limit': 10,
-  'peerIdLength': 6, // length of the peer id segment of the url. Should be set according to peering-server setting
-  'fileIdLength': 4, // length of the file id segment of the url. Should be set according to peering-server setting
-  'chunkSize': 15000, // big files get chunked into chunkSize
-  'chunksPerBlock': 64, // size of chunks in a block
-  'peerConfig': {
+  debug: false,
+  limit: 10,
+  peerIdLength: 6, // length of the peer id segment of the url. Should be set according to peering-server setting
+  fileIdLength: 4, // length of the file id segment of the url. Should be set according to peering-server setting
+  chunkSize: 15000, // big files get chunked into chunkSize
+  chunksPerBlock: 64, // size of chunks in a block
+  peerConfig: {
     host: 'localhost', // peering server address
     path: '/signaling', // endpoint path
     port: 9000,

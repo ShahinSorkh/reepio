@@ -1,4 +1,4 @@
-/* globals angular, Peer */
+import { Peer } from 'peerjs'
 /**
  * Copyright (C) 2014 reep.io
  * KodeKraftwerk (https://github.com/KodeKraftwerk/)
