@@ -14,7 +14,7 @@ This repository holds the sources to run the reep.io frontend.
 _Note:_ Unfortunately the domain (reep [dot] io) and the server source code is unavailable.
 
 ## TODO
-- [ ] Find replacement for [peerjs](https://github.com/KodeKraftwerk/peerjs.git)
+- [x] Find replacement for [peerjs](https://github.com/KodeKraftwerk/peerjs.git)
 - [ ] Fix tests errors
 
 ## Configuration
