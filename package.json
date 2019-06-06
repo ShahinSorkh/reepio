@@ -28,7 +28,8 @@
     "watch-js": "webpack -w -p",
     "watch-media": "watch 'yarn build-media' 'src/media'",
     "watch": "parallelshell 'yarn watch-html' 'yarn watch-js' 'yarn watch-media'",
-    "start": "parallelshell 'http-server public -a 0.0.0.0 -p 9001 -c-1 -o' 'yarn watch'",
+    "serve": "http-server public -a 0.0.0.0 -p 9001 -c-1 -o",
+    "start": "parallelshell 'yarn serve' 'yarn watch'",
     "lint": "eslint --ext js --fix src tests",
     "pretest": "yarn lint",
     "test": "karma start"
