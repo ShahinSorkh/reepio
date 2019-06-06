@@ -15,7 +15,7 @@ _Note:_ Unfortunately the domain (reep [dot] io) and the server source code is u
 
 ## TODO
 - [x] Find replacement for [peerjs](https://github.com/KodeKraftwerk/peerjs.git)
-- [ ] Fix tests errors
+- [x] Fix tests errors
 
 ## Configuration
 You can set some options in the public/config.js (if it does not exist, copy the config.dist.js)

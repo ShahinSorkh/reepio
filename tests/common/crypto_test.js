@@ -43,10 +43,10 @@
       }))
 
       it('should return a hash for valid values', inject(function ($crypto) {
-        expect($crypto.crc32(testString)).toNotBe(null)
-        expect($crypto.crc32(0)).toNotBe(null)
-        expect($crypto.crc32('0')).toNotBe(null)
-        expect($crypto.crc32(' ')).toNotBe(null)
+        expect($crypto.crc32(testString)).toBeTruthy()
+        expect($crypto.crc32(0)).toBeTruthy()
+        expect($crypto.crc32('0')).toBeTruthy()
+        expect($crypto.crc32(' ')).toBeTruthy()
       }))
 
       it('should return null for invalid values', inject(function ($crypto) {
