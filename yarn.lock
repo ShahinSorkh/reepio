@@ -5726,10 +5726,8 @@ peer@^0.2.10:
     optimist "~0.6.1"
     ws "6.0.0"
 
-peerjs@^1.0.0:
+"peerjs@file:./abandonedlibs/peerjs":
   version "1.0.0"
-  resolved "https://registry.yarnpkg.com/peerjs/-/peerjs-1.0.0.tgz#5426e4bfb482ff7b041909a88a63d5c2a24daf5f"
-  integrity sha512-wyKGB/Bg7sSU0wOBiAHozfLHjSko0ZaIl5OfcDlMEOT9SSeFhXBIPcu+5kCZvUKoWZccdLFQDE5PueWYDpZttg==
   dependencies:
     "@types/node" "^10.14.4"
     "@types/webrtc" "0.0.24"

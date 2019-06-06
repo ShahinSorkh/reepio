@@ -1,4 +1,3 @@
-import { util } from 'peerjs'
 /**
  * Copyright (C) 2014 reep.io
  * KodeKraftwerk (https://github.com/KodeKraftwerk/)
@@ -20,6 +19,9 @@ import { util } from 'peerjs'
  *  with this program; if not, write to the Free Software Foundation, Inc.,
  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
+
+import util from 'peerjs/lib/util'
+
 (function () {
   'use strict'
 

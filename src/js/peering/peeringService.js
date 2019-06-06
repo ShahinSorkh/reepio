@@ -1,4 +1,3 @@
-import { Peer } from 'peerjs'
 /**
  * Copyright (C) 2014 reep.io
  * KodeKraftwerk (https://github.com/KodeKraftwerk/)
@@ -20,6 +19,9 @@ import { Peer } from 'peerjs'
  *  with this program; if not, write to the Free Software Foundation, Inc.,
  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
+
+import Peer from 'peerjs/lib/peer'
+
 (function () {
   angular.module('peering', [])
     .service('peeringService', ['config', '$q', 'randomService', function (config, $q, randomService) {

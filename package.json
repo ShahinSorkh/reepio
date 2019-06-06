@@ -15,7 +15,7 @@
     "jquery": "^3.4.1",
     "pastejs": "^1.0.6",
     "peer": "^0.2.10",
-    "peerjs": "^1.0.0",
+    "peerjs": "file:./abandonedlibs/peerjs",
     "popper": "^1.0.1",
     "swfobject": "file:./abandonedlibs/swfobject"
   },
