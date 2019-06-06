@@ -70,7 +70,7 @@
             this.uploads[fileId].password = ''
 
             // Bind the connection event only once
-            if (!peer._events.hasOwnProperty('connection')) {
+            if (!peer._events) {
               peer.on('connection', function (connection) {
                 connection.on('data', function (data) {
                   if (this.hasOwnProperty('__onPacket' + data.packet) === false ||
