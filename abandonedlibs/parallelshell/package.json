@@ -1,0 +1,32 @@
+{
+  "name": "parallelshell",
+  "version": "3.0.2",
+  "description": "Invoke multiple commands, running in parallel",
+  "homepage": "https://github.com/darkguy2008/parallelshell",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:darkguy2008/parallelshell.git"
+  },
+  "bugs": {
+    "url": "https://github.com/darkguy2008/parallelshell/issues"
+  },
+  "main": "index.js",
+  "bin": {
+    "parallelshell": "./index.js"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "keywords": [
+    "parallel",
+    "shell"
+  ],
+  "author": "DARKGuy <darkguy2008@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "bluebird": "^3.5.0",
+    "chai": "^4.0.2",
+    "coffee-script": "^1.12.6",
+    "mocha": "^3.4.2"
+  }
+}

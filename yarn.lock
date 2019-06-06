@@ -5543,10 +5543,8 @@ pako@~1.0.5:
   resolved "https://registry.yarnpkg.com/pako/-/pako-1.0.10.tgz#4328badb5086a426aa90f541977d4955da5c9732"
   integrity sha512-0DTvPVU3ed8+HNXOu5Bs+o//Mbdj9VNQMUOe9oKCwh8l0GNwpTDMKCWbRjgtD291AWnkAgkqA/LOnQS8AmS1tw==
 
-parallelshell@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/parallelshell/-/parallelshell-2.0.0.tgz#c94af5d6348526a26da9020faeb5fc724a80600c"
-  integrity sha1-yUr11jSFJqJtqQIPrrX8ckqAYAw=
+"parallelshell@file:./abandonedlibs/parallelshell":
+  version "3.0.2"
 
 parent-module@^1.0.0:
   version "1.0.1"
