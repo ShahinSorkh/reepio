@@ -99,7 +99,7 @@ function loadConfig (env) {
   try {
     return require(envConfiguration)
   } catch (e) {
-    let defaultConfiguration = getConfigurationPathForEnvironment('dist')
+    let defaultConfiguration = getConfigurationPathForEnvironment('production')
     console.log(clc.yellow(`No config found for environment ${env}. Loading default configuration at ${defaultConfiguration}`))
     return require(defaultConfiguration)
   }

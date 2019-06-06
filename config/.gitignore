@@ -1,0 +1,4 @@
+*
+!config.dev.js
+!config.production.js
+!.gitignore

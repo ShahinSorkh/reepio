@@ -31,9 +31,10 @@
     "serve": "http-server public -a 0.0.0.0 -p 9001 -c-1 -o",
     "peer": "peerjs --port 9000 --path /signaling --key reepio",
     "peer:dev": "peerjs --port 9000 --debug true",
-    "start": "parallelshell 'yarn serve' 'yarn watch' 'yarn peer:dev'",
+    "start": "parallelshell 'yarn serve' 'yarn watch' 'yarn peer'",
+    "dev": "NODE_ENV=dev parallelshell 'yarn serve' 'yarn watch' 'yarn peer:dev'",
     "lint": "eslint --ext js --fix src tests",
-    "pretest": "yarn lint",
+    "pretest": "yarn lint && NODE_ENV=dev yarn build",
     "test": "karma start"
   },
   "author": "https://github.com/kodekraftwerk",
