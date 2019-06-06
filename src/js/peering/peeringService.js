@@ -20,7 +20,7 @@
  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-import Peer from 'peerjs/lib/peer'
+import { Peer } from 'peerjs/lib/peer'
 
 (function () {
   angular.module('peering', [])
