@@ -1,0 +1,6 @@
+{
+  "name": "swfobject",
+  "version": "0.0.0",
+  "main": "swfobject/swfobject.js",
+  "license": "MIT"
+}

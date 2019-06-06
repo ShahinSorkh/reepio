@@ -11,10 +11,7 @@ let config = loadConfig(env)
 let plugins = [
   new webpack.ProvidePlugin({
     $: 'jquery',
-    jQuery: 'jquery',
-    swfobject: path.resolve(
-      __dirname, 'abandonedlibs', 'swfobject', 'swfobject', 'swfobject'
-    )
+    jQuery: 'jquery'
   }),
   new webpack.DefinePlugin({
     APP_ENV: JSON.stringify(env),

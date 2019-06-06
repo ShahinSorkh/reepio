@@ -16,7 +16,8 @@
     "pastejs": "^1.0.6",
     "peer": "^0.2.10",
     "peerjs": "^1.0.0",
-    "popper": "^1.0.1"
+    "popper": "^1.0.1",
+    "swfobject": "file:./abandonedlibs/swfobject"
   },
   "scripts": {
     "build-html": "rsync -r src/html/ public/html && rsync src/html/*.html public/",
