@@ -12,7 +12,8 @@ Vagrant.configure(2) do |config|
 
   # Every Vagrant development environment requires a box. You can search for
   # boxes at https://atlas.hashicorp.com/search.
-  config.vm.box = "puphpet/debian75-x64"
+  config.vm.box = "bento/debian-9.6"
+  config.vm.box_version = "201812.27.0"
 
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
@@ -70,7 +71,7 @@ Vagrant.configure(2) do |config|
 
     # add nodejs to apt-get
     apt-get install curl
-    curl --silent --location https://deb.nodesource.com/setup_0.12 | sudo bash -
+    curl --silent --location https://deb.nodesource.com/setup_10.x | sudo bash -
 
     # finally install everything
     apt-get install --yes git nodejs
